@@ -1,0 +1,36 @@
+# Prometheus configuration for Neural Search
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+rule_files: []
+
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # Neural Search API
+  - job_name: "neural-search-api"
+    static_configs:
+      - targets: ["api:8000"]
+    metrics_path: /metrics
+    scrape_interval: 10s
+
+  # Qdrant metrics (if enabled)
+  - job_name: "qdrant"
+    static_configs:
+      - targets: ["qdrant:6333"]
+    metrics_path: /metrics
+    scrape_interval: 30s
+
+  # Redis metrics (requires redis-exporter)
+  # - job_name: "redis"
+  #   static_configs:
+  #     - targets: ["redis-exporter:9121"]
